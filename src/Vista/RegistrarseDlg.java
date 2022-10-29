@@ -1,5 +1,8 @@
 package Vista;
 
+import Controlador.UsuarioDAO;
+import Exception.DAOException;
+import Modelo.Usuario;
 import java.io.IOException;
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -11,9 +14,9 @@ import java.util.regex.Pattern;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
-
 public class RegistrarseDlg extends javax.swing.JDialog {
 
+    UsuarioDAO udao = new UsuarioDAO();
 
     public RegistrarseDlg() {
 
@@ -22,20 +25,20 @@ public class RegistrarseDlg extends javax.swing.JDialog {
         TextoPreliminar();
     }
 
-  
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
         txtEmail = new javax.swing.JTextField();
-        txtContraseña1 = new javax.swing.JTextField();
         txtNombre = new javax.swing.JTextField();
+        txtContraseña1 = new javax.swing.JPasswordField();
         txtContraseña = new javax.swing.JPasswordField();
         botonCuentaNueva = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -46,11 +49,7 @@ public class RegistrarseDlg extends javax.swing.JDialog {
 
         txtEmail.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
         txtEmail.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jPanel1.add(txtEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 230, 340, 50));
-
-        txtContraseña1.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
-        txtContraseña1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jPanel1.add(txtContraseña1, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 300, 340, 50));
+        jPanel1.add(txtEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 220, 340, 50));
 
         txtNombre.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
         txtNombre.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -59,13 +58,19 @@ public class RegistrarseDlg extends javax.swing.JDialog {
                 txtNombreCaretUpdate(evt);
             }
         });
-        jPanel1.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 160, 340, 50));
+        jPanel1.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 140, 340, 50));
+
+        txtContraseña1.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
+        txtContraseña1.setToolTipText("");
+        txtContraseña1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        txtContraseña1.setPreferredSize(new java.awt.Dimension(111, 25));
+        jPanel1.add(txtContraseña1, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 300, 340, 50));
 
         txtContraseña.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
+        txtContraseña.setToolTipText("");
         txtContraseña.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         txtContraseña.setPreferredSize(new java.awt.Dimension(111, 25));
-        txtContraseña.setToolTipText("");
-        jPanel1.add(txtContraseña, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 370, 340, 50));
+        jPanel1.add(txtContraseña, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 380, 340, 50));
 
         botonCuentaNueva.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/3.png"))); // NOI18N
         botonCuentaNueva.setText("jButton1");
@@ -84,6 +89,9 @@ public class RegistrarseDlg extends javax.swing.JDialog {
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/4.png"))); // NOI18N
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 60, -1, 452));
 
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/PomodoroLogo.png"))); // NOI18N
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 120, 640, 350));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -99,34 +107,67 @@ public class RegistrarseDlg extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonCuentaNuevaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCuentaNuevaActionPerformed
-
+        if (txtNombre.getText().equalsIgnoreCase("") || txtEmail.getText().equalsIgnoreCase("") || txtContraseña1.getText().equalsIgnoreCase("") || txtContraseña.getText().equalsIgnoreCase("")) {
+            JOptionPane.showMessageDialog(this, "Agregue la informacion del usuario",
+                    "Error de insertar", JOptionPane.ERROR_MESSAGE);
+        } else {
+            try {
+                crearUsuario();
+                Login inicio = new Login();
+                inicio.setVisible(true);
+                if (inicio.isVisible()) {
+                    dispose();
+                }
+            } catch (DAOException ex) {
+                Logger.getLogger(RegistrarseDlg.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_botonCuentaNuevaActionPerformed
 
     private void txtNombreCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txtNombreCaretUpdate
 
     }//GEN-LAST:event_txtNombreCaretUpdate
 
+    private void crearUsuario() throws DAOException {
+
+        String nombre = this.txtNombre.getText();
+        String contraseña = this.txtContraseña1.getText();
+        String contraseña1 = this.txtContraseña.getText();
+        String usuario = this.txtEmail.getText();
+
+        if (contraseña.equals(contraseña1)) {
+
+            Usuario u = new Usuario(usuario, contraseña, nombre);
+            udao.insertar(u);
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Contraseñas no coinciden",
+                    "Error al crear usuario", JOptionPane.ERROR_MESSAGE);
+        }
+
+    }
+
     private void TextoPreliminar() {
-        TextPrompt placeholder1 = new TextPrompt("Correo electronico", txtEmail);
-        TextPrompt placeholder2 = new TextPrompt("Contraseña", txtContraseña);
-        TextPrompt placeholder3 = new TextPrompt("Número de celular", txtContraseña1);
-        TextPrompt placeholder4 = new TextPrompt("Nombre completo", txtNombre);
+        TextPrompt placeholder1 = new TextPrompt(" Usuario", txtEmail);
+        TextPrompt placeholder2 = new TextPrompt(" Confirma tu contraseña", txtContraseña);
+        TextPrompt placeholder3 = new TextPrompt(" Contraseña", txtContraseña1);
+        TextPrompt placeholder4 = new TextPrompt(" Nombre", txtNombre);
 
         placeholder1.changeAlpha(0.45f);
         placeholder2.changeAlpha(0.45f);
         placeholder3.changeAlpha(0.45f);
         placeholder4.changeAlpha(0.45f);
-
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonCuentaNueva;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JPasswordField txtContraseña;
-    private javax.swing.JTextField txtContraseña1;
+    private javax.swing.JPasswordField txtContraseña1;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables

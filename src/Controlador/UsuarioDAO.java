@@ -1,15 +1,17 @@
 package Controlador;
 
 import Exception.DAOException;
-import Modelo.Tarea;
 import Modelo.Usuario;
+import Vista.PrincipalDlg;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.swing.JOptionPane;
 
 public class UsuarioDAO extends BaseDAO<Usuario>{
 
+    @Override
     public ArrayList<Usuario> consultar() throws DAOException {
 
         EntityManager em = this.generarConexion();
@@ -97,4 +99,17 @@ public class UsuarioDAO extends BaseDAO<Usuario>{
         em.getTransaction().commit();
     }
 
+      public Usuario validarUsuario(String usuario, String contraseña) throws DAOException {
+        EntityManager em = this.generarConexion();
+        Query consulta = em.createQuery("SELECT u FROM Usuario u WHERE u.usuario = '" + usuario + "'and u.contraseña ='" + contraseña + "'");
+        List<Usuario> usuarios = consulta.getResultList();
+
+        if (usuarios.size() == 0) {
+            JOptionPane.showMessageDialog(null, "Informacion incorrecta!", "Error al iniciar sesion", JOptionPane.ERROR_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, "Bienvenido", "Inicio de sesion", JOptionPane.PLAIN_MESSAGE);
+        }
+        return usuarios.get(0);
+    }
+    
 }

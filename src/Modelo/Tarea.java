@@ -31,6 +31,37 @@ public class Tarea implements Serializable {
     @ManyToOne()
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
+
+    public Tarea() {
+    }
+
+    public Tarea(Long id, String titulo, Calendar fecha, String descripcion, String estado, Usuario usuario) {
+        this.id = id;
+        this.titulo = titulo;
+        this.fecha = fecha;
+        this.descripcion = descripcion;
+        this.estado = estado;
+        this.usuario = usuario;
+    }
+
+    public Tarea(String titulo, Calendar fecha, String descripcion, String estado, Usuario usuario) {
+        this.titulo = titulo;
+        this.fecha = fecha;
+        this.descripcion = descripcion;
+        this.estado = estado;
+        this.usuario = usuario;
+    }
+
+    public Tarea(Long id) {
+        this.id = id;
+    }
+
+    public Tarea(String titulo, Calendar fecha, String descripcion, String estado) {
+        this.titulo = titulo;
+        this.fecha = fecha;
+        this.descripcion = descripcion;
+        this.estado = estado;
+    }
     
     public Long getId() {
         return id;

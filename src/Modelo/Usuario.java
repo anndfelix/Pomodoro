@@ -3,7 +3,6 @@ package Modelo;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.*;
-
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.*;
@@ -26,12 +25,30 @@ public class Usuario implements Serializable {
     
     @Column(name = "nombre", nullable = false)
     private String nombre;
-    
-     @Column(name = "email", nullable = false)
-    private String email;
      
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<Tarea> tareas;
+
+    public Usuario() {
+    }
+
+    public Usuario(Long id, String usuario, String contraseña, String nombre, List<Tarea> tareas) {
+        this.id = id;
+        this.usuario = usuario;
+        this.contraseña = contraseña;
+        this.nombre = nombre;
+        this.tareas = tareas;
+    }
+
+    public Usuario(String usuario, String contraseña, String nombre) {
+        this.usuario = usuario;
+        this.contraseña = contraseña;
+        this.nombre = nombre;
+    }
+
+    public Usuario(Long id) {
+        this.id = id;
+    }
     
     public Long getId() {
         return id;
@@ -65,16 +82,6 @@ public class Usuario implements Serializable {
         this.nombre = nombre;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    
-    
     public List<Tarea> getTareas() {
         return tareas;
     }

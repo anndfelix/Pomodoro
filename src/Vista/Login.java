@@ -1,11 +1,15 @@
-
-
 package Vista;
+
+import Controlador.UsuarioDAO;
+import Exception.DAOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Login extends javax.swing.JDialog {
 
-    public Login(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    UsuarioDAO udao = new UsuarioDAO();
+
+    public Login() {
         initComponents();
         setLocationRelativeTo(null);
         TextoPreliminar();
@@ -22,6 +26,8 @@ public class Login extends javax.swing.JDialog {
         txtEmail = new javax.swing.JTextField();
         txtContraseña = new javax.swing.JPasswordField();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -67,31 +73,50 @@ public class Login extends javax.swing.JDialog {
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/4.png"))); // NOI18N
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 80, -1, 452));
 
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/PomodoroLogo.png"))); // NOI18N
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 120, 640, 350));
+
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/PomodoroLogo.png"))); // NOI18N
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 120, 640, 350));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1344, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1356, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 659, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonIniciarSesionActionPerformed
+        try {
+            iniciarSesion();
+            limpiar();
 
+            PrincipalDlg muro = new PrincipalDlg();
+            muro.setVisible(true);
+            
+            if (muro.isVisible()) {
+                dispose();
+            }
+
+        } catch (DAOException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_botonIniciarSesionActionPerformed
 
     private void botonCuentaNuevaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCuentaNuevaActionPerformed
         RegistrarseDlg registrarse = new RegistrarseDlg();
         registrarse.setVisible(true);
-        
+
         if (registrarse.isVisible()) {
-                dispose();
-            }
+            dispose();
+        }
 
     }//GEN-LAST:event_botonCuentaNuevaActionPerformed
 
@@ -99,7 +124,20 @@ public class Login extends javax.swing.JDialog {
 
     }//GEN-LAST:event_txtEmailActionPerformed
 
+      public void limpiar() {
+        txtContraseña.setText("");
+        txtEmail.setText("");
+    }
+
     
+    private void iniciarSesion() throws DAOException {
+        String password = txtContraseña.getText();
+        String email = txtEmail.getText();
+
+        udao.validarUsuario(email, password);
+
+    }
+
     private void TextoPreliminar() {
         TextPrompt placeholder1 = new TextPrompt("Correo electronico", txtEmail);
         TextPrompt placeholder2 = new TextPrompt("Contraseña", txtContraseña);
@@ -107,7 +145,7 @@ public class Login extends javax.swing.JDialog {
         placeholder1.changeAlpha(0.45f);
         placeholder2.changeAlpha(0.45f);
     }
-    
+
     public static void main(String args[]) {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -129,14 +167,7 @@ public class Login extends javax.swing.JDialog {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                Login dialog = new Login(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
+                new Login().setVisible(true);
             }
         });
     }
@@ -145,6 +176,8 @@ public class Login extends javax.swing.JDialog {
     private javax.swing.JButton botonCuentaNueva;
     private javax.swing.JButton botonIniciarSesion;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JPasswordField txtContraseña;
