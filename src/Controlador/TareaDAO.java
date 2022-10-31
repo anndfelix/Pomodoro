@@ -2,6 +2,7 @@ package Controlador;
 
 import Exception.DAOException;
 import Modelo.Tarea;
+import Modelo.Usuario;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -98,4 +99,47 @@ public class TareaDAO extends BaseDAO<Tarea> {
         }
         em.getTransaction().commit();
     }
+
+    public ArrayList<Tarea>tareasRelaciones(Long idusuario) throws DAOException {
+
+        ArrayList<Tarea> tareas = new ArrayList<>();
+        List<Tarea> relaciones = this.consultar();
+
+        for (Tarea t : relaciones) {
+
+            if (t.getUsuario().getId().equals(idusuario)) {
+                tareas.add(t);
+            }
+        }
+
+        if (tareas.isEmpty()) {
+            throw new DAOException("El cliente " + idusuario + " no existe!");
+        } else {
+            return tareas;
+        }
+    }
+
+        public ArrayList<Tarea>tareasPendientes(Long idusuario) throws DAOException {
+
+        ArrayList<Tarea> tareas = new ArrayList<>();
+        List<Tarea> relaciones = this.consultar();
+
+        for (Tarea t : relaciones) {
+
+            if (t.getUsuario().getId().equals(idusuario)) {
+                
+                if(t.getEstado().equalsIgnoreCase("Pendiente")){
+                     tareas.add(t);
+                }
+                
+            }
+        }
+
+        if (tareas.isEmpty()) {
+            throw new DAOException("El cliente " + idusuario + " no existe!");
+        } else {
+            return tareas;
+        }
+    }
+    
 }

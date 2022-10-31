@@ -2,11 +2,14 @@ package Vista;
 
 import Controlador.UsuarioDAO;
 import Exception.DAOException;
+import Modelo.Usuario;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Login extends javax.swing.JDialog {
 
+    public static Usuario usuario;
+    
     UsuarioDAO udao = new UsuarioDAO();
 
     public Login() {
@@ -134,7 +137,7 @@ public class Login extends javax.swing.JDialog {
         String password = txtContraseña.getText();
         String email = txtEmail.getText();
 
-        udao.validarUsuario(email, password);
+        usuario = udao.validarUsuario(email, password);
 
     }
 

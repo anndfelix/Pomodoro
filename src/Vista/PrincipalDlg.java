@@ -1,12 +1,17 @@
 
 package Vista;
 
+import Exception.DAOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class PrincipalDlg extends javax.swing.JDialog {
 
     public PrincipalDlg() {
         initComponents();
         setLocationRelativeTo(null);
+   
     }
 
    
@@ -28,6 +33,7 @@ public class PrincipalDlg extends javax.swing.JDialog {
         botonPomodoro.setBackground(new java.awt.Color(0, 0, 0));
         botonPomodoro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/boton2.png"))); // NOI18N
         botonPomodoro.setToolTipText("");
+        botonPomodoro.setBorder(null);
         botonPomodoro.setBorderPainted(false);
         botonPomodoro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -35,7 +41,9 @@ public class PrincipalDlg extends javax.swing.JDialog {
             }
         });
 
+        botonCerrarSesion.setBackground(new java.awt.Color(0, 0, 0));
         botonCerrarSesion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/cerrarsesion.png"))); // NOI18N
+        botonCerrarSesion.setBorder(null);
         botonCerrarSesion.setBorderPainted(false);
         botonCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -48,6 +56,7 @@ public class PrincipalDlg extends javax.swing.JDialog {
         botonPerfil.setBackground(new java.awt.Color(0, 0, 0));
         botonPerfil.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/boton1.png"))); // NOI18N
         botonPerfil.setToolTipText("");
+        botonPerfil.setBorder(null);
         botonPerfil.setBorderPainted(false);
         botonPerfil.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -58,6 +67,7 @@ public class PrincipalDlg extends javax.swing.JDialog {
         botonHistorial.setBackground(new java.awt.Color(0, 0, 0));
         botonHistorial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/boton3.png"))); // NOI18N
         botonHistorial.setToolTipText("");
+        botonHistorial.setBorder(null);
         botonHistorial.setBorderPainted(false);
         botonHistorial.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -70,13 +80,12 @@ public class PrincipalDlg extends javax.swing.JDialog {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(104, 104, 104)
+                .addGap(180, 180, 180)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(botonPomodoro, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(botonHistorial, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(botonPerfil, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 403, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 157, Short.MAX_VALUE)
+                    .addComponent(botonPomodoro, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(botonHistorial, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(botonPerfil))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 206, Short.MAX_VALUE)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 485, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(72, 72, 72)
                 .addComponent(botonCerrarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -90,12 +99,12 @@ public class PrincipalDlg extends javax.swing.JDialog {
                         .addGap(79, 79, 79)
                         .addComponent(botonPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(43, 43, 43)
-                        .addComponent(botonHistorial, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(40, 40, 40)
-                        .addComponent(botonPomodoro, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(botonHistorial, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(41, 41, 41)
                         .addComponent(botonCerrarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(40, 40, 40)
+                .addComponent(botonPomodoro, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(80, Short.MAX_VALUE))
             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -115,7 +124,12 @@ public class PrincipalDlg extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonPomodoroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonPomodoroActionPerformed
-       
+        try {
+            PomodoroDlg pomodoro = new PomodoroDlg();
+            pomodoro.setVisible(true);
+        } catch (DAOException ex) {
+            Logger.getLogger(PrincipalDlg.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_botonPomodoroActionPerformed
 
     private void botonHistorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonHistorialActionPerformed
@@ -123,7 +137,8 @@ public class PrincipalDlg extends javax.swing.JDialog {
     }//GEN-LAST:event_botonHistorialActionPerformed
 
     private void botonPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonPerfilActionPerformed
-        
+        PerfilDlg perfil = new PerfilDlg();
+        perfil.setVisible(true);
     }//GEN-LAST:event_botonPerfilActionPerformed
 
     private void botonCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrarSesionActionPerformed
