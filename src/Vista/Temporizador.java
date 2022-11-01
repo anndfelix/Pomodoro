@@ -20,7 +20,7 @@ public class Temporizador extends javax.swing.JFrame {
     private int sesion = 0;
     private int maxSesiones = 3;
     private int tiempoDescanso = 5; //segundos
-    private int tiempoSesion = 3; // Segundos
+    private int tiempoSesion = 8; // Segundos
     private int tiempoTranscurrido = tiempoSesion * 1000; // Milisegundos
     private int h = tiempoTranscurrido / 3600000;
     private int m = (tiempoTranscurrido / 600000) % 60;
@@ -60,6 +60,10 @@ public class Temporizador extends javax.swing.JFrame {
                 String m_string = String.format("%02d", m);
                 String s_string = String.format("%02d", s);
                 txtTemporizador.setText(h_string + ":" + m_string + ":" + s_string);
+                
+                if (h == 0 && m == 0 && s == 5) {
+                    //TODO
+                }
 
             } else {
                 pararTemporizadorEnCero();
