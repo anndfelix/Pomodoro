@@ -14,9 +14,13 @@ import javax.swing.Timer;
  *
  * @author Carlos
  */
-public class Temporizador extends javax.swing.JFrame{
+public class Temporizador extends javax.swing.JFrame {
 
-    private int tiempoSesion = 15; // Segundos
+    private int iteracionSesiones = 0;
+    private int sesion = 0;
+    private int maxSesiones = 3;
+    private int tiempoDescanso = 5; //segundos
+    private int tiempoSesion = 8; // Segundos
     private int tiempoTranscurrido = tiempoSesion * 1000; // Milisegundos
     private int h = tiempoTranscurrido / 3600000;
     private int m = (tiempoTranscurrido / 600000) % 60;
@@ -33,16 +37,19 @@ public class Temporizador extends javax.swing.JFrame{
     public Temporizador() {
         initComponents();
         this.setLocationRelativeTo(null);
-        tempo();
+        imprimeTemporizador();
+        validaSesion();
+        imprimeSesion();
     }
 
-    private void tempo() {
+    private void imprimeTemporizador() {
         this.txtTemporizador.setText(h_string + ":" + m_string + ":" + s_string);
     }
 
     Timer timer = new Timer(1000, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
+            imprimeSesion();
             if (tiempoTranscurrido != 0) {
                 tiempoTranscurrido -= 1000;
                 h = (tiempoTranscurrido / 3600000);
@@ -53,6 +60,10 @@ public class Temporizador extends javax.swing.JFrame{
                 String m_string = String.format("%02d", m);
                 String s_string = String.format("%02d", s);
                 txtTemporizador.setText(h_string + ":" + m_string + ":" + s_string);
+                
+                if (h == 0 && m == 0 && s == 5) {
+                    //TODO
+                }
 
             } else {
                 pararTemporizadorEnCero();
@@ -60,6 +71,7 @@ public class Temporizador extends javax.swing.JFrame{
         }
 
         private void pararTemporizadorEnCero() {
+            validaSesion();
             timer.stop();
             tiempoTranscurrido = tiempoSesion * 1000;
             h = (tiempoTranscurrido / 3600000);
@@ -72,11 +84,13 @@ public class Temporizador extends javax.swing.JFrame{
             txtTemporizador.setText(h_string + ":" + m_string + ":" + s_string);
             btnIniciar.setText("Iniciar");
             iniciarPresionado = false;
-            
+
             int opcion = JOptionPane.showConfirmDialog(null, "¿Quieres seguir con las sesiones?", "Sesion Pomodoro", JOptionPane.YES_NO_OPTION);
             if (opcion == JOptionPane.YES_OPTION) {
-                JOptionPane.showMessageDialog(null, "Continuar sesion(es)");
-            } else if (opcion == JOptionPane.NO_OPTION){
+                JOptionPane.showMessageDialog(null, "¡Continuemos con la siguiente sesion!");
+                iniciarTemporizador();
+                System.out.println(sesion);
+            } else if (opcion == JOptionPane.NO_OPTION) {
                 JOptionPane.showMessageDialog(null, "No te rindas, ¡suerte en tu proxima sesion!");
             }
         }
@@ -97,6 +111,7 @@ public class Temporizador extends javax.swing.JFrame{
         txtTemporizador = new javax.swing.JLabel();
         btnReiniciar = new javax.swing.JButton();
         txtTemporizadorPomodoro = new javax.swing.JLabel();
+        txtNumSesion = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -128,37 +143,47 @@ public class Temporizador extends javax.swing.JFrame{
         txtTemporizadorPomodoro.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         txtTemporizadorPomodoro.setText("Temporizador Pomodoro");
 
+        txtNumSesion.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        txtNumSesion.setForeground(new java.awt.Color(204, 204, 204));
+        txtNumSesion.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        txtNumSesion.setText("Sesion");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 149, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(txtTemporizadorPomodoro, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(136, 136, 136))
+                .addGap(181, 181, 181))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(136, 136, 136)
+                        .addGap(152, 152, 152)
                         .addComponent(btnIniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(39, 39, 39)
+                        .addGap(103, 103, 103)
                         .addComponent(btnReiniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(186, 186, 186)
-                        .addComponent(txtTemporizador, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(227, 227, 227)
+                        .addComponent(txtTemporizador, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(202, 202, 202)
+                        .addComponent(txtNumSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(171, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(41, Short.MAX_VALUE)
+                .addContainerGap(48, Short.MAX_VALUE)
                 .addComponent(txtTemporizadorPomodoro, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34)
+                .addGap(26, 26, 26)
                 .addComponent(txtTemporizador)
-                .addGap(90, 90, 90)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnReiniciar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnIniciar, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
+                .addGap(32, 32, 32)
+                .addComponent(txtNumSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnIniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnReiniciar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(95, 95, 95))
         );
 
@@ -177,6 +202,10 @@ public class Temporizador extends javax.swing.JFrame{
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarActionPerformed
+        iniciarTemporizador();
+    }//GEN-LAST:event_btnIniciarActionPerformed
+
+    public void iniciarTemporizador() {
         if (iniciarPresionado == false) {
             this.btnIniciar.setText("Parar");
             iniciarPresionado = true;
@@ -186,7 +215,43 @@ public class Temporizador extends javax.swing.JFrame{
             iniciarPresionado = false;
             timer.stop();
         }
-    }//GEN-LAST:event_btnIniciarActionPerformed
+    }
+
+    private void validaSesion() {
+        if (sesion < maxSesiones) {
+            sesion++;
+        } else if (sesion == maxSesiones) {
+            sesion = 0;
+            validaIteracionSesiones();
+        }
+        imprimeSesion();
+    }
+
+    private void validaIteracionSesiones() {
+        if (iteracionSesiones < maxSesiones) {
+            iteracionSesiones++;
+        } else {
+            iteracionSesiones = 0;
+        }
+        System.out.println("Iteracion " + iteracionSesiones + "Completada");
+    }
+
+    private void imprimeSesion() {
+        if (iteracionSesiones < maxSesiones) {
+            if (sesion == 0) {
+                txtNumSesion.setText("Sesion de descanso");
+                tiempoSesion = tiempoDescanso;
+            } else {
+                txtNumSesion.setText("Sesion " + sesion + "/" + maxSesiones);
+                tiempoSesion = 3;
+            }
+        } else {
+            txtNumSesion.setText("Sesion de descanso");
+            tiempoSesion = 7;
+            iteracionSesiones = 0;
+        }
+
+    }
 
     private void btnReiniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReiniciarActionPerformed
         timer.stop();
@@ -242,9 +307,9 @@ public class Temporizador extends javax.swing.JFrame{
     private javax.swing.JButton btnIniciar;
     private javax.swing.JButton btnReiniciar;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel txtNumSesion;
     private javax.swing.JLabel txtTemporizador;
     private javax.swing.JLabel txtTemporizadorPomodoro;
     // End of variables declaration//GEN-END:variables
 
-    
 }
