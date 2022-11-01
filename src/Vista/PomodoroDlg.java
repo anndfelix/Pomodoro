@@ -70,6 +70,8 @@ public class PomodoroDlg extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
+        tablaTareas.setDropMode(javax.swing.DropMode.ON);
+        tablaTareas.getTableHeader().setReorderingAllowed(false);
         jScrollPane3.setViewportView(tablaTareas);
 
         jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 230, 530, 356));
@@ -153,7 +155,7 @@ public class PomodoroDlg extends javax.swing.JDialog {
     }//GEN-LAST:event_botonContinuarActionPerformed
 
     private void txtTituloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTituloActionPerformed
-     
+
     }//GEN-LAST:event_txtTituloActionPerformed
 
     private void tablaTareasPendientes() throws DAOException {
@@ -182,35 +184,21 @@ public class PomodoroDlg extends javax.swing.JDialog {
         String descripcion = this.txtContenido.getText();
         String estado = "Pendiente";
 
-        List<Tarea> tareas = tdao.consultar();
-        List<Tarea> ts = new ArrayList<>();
-
         Tarea tarea = new Tarea(titulo, descripcion);
 
-        for (Tarea t : tareas) {
-            Tarea tAgregar = new Tarea(t.getTitulo(), t.getDescripcion());
-            ts.add(tAgregar);
-        }
+        Tarea tareaAgregar = new Tarea(titulo, new GregorianCalendar(), descripcion, estado, user);
 
-        if (ts.contains(tarea)) {
-            JOptionPane.showMessageDialog(this, "La tarea ya existe.",
+        if (descripcion.length() > 100) {
+            JOptionPane.showMessageDialog(this, "La descripcion debe tener max 100 caracteres.",
                     "Error al agregar tarea", JOptionPane.ERROR_MESSAGE);
         } else {
-
-            Tarea tareaAgregar = new Tarea(titulo, new GregorianCalendar(), descripcion, estado, user);
-
-            if (descripcion.length() > 100) {
-                JOptionPane.showMessageDialog(this, "La descripcion debe tener max 100 caracteres.",
-                        "Error al agregar tarea", JOptionPane.ERROR_MESSAGE);
+            if (!descripcion.isEmpty() || !titulo.isEmpty()) {
+                tdao.insertar(tareaAgregar);
+                JOptionPane.showMessageDialog(this, ("Se ha agregado la tarea."),
+                        "Tarea agregada", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                if (!descripcion.isEmpty() || !titulo.isEmpty()) {
-                    tdao.insertar(tareaAgregar);
-                    JOptionPane.showMessageDialog(this, ("Se ha agregado la tarea."),
-                            "Tarea agregada", JOptionPane.INFORMATION_MESSAGE);
-                } else {
-                    JOptionPane.showMessageDialog(this, "Debe llenar la informacion requerida.",
-                            "Error al agregar tarea", JOptionPane.ERROR_MESSAGE);
-                }
+                JOptionPane.showMessageDialog(this, "Debe llenar la informacion requerida.",
+                        "Error al agregar tarea", JOptionPane.ERROR_MESSAGE);
             }
         }
 

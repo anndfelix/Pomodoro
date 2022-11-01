@@ -138,9 +138,13 @@ public class Tarea implements Serializable {
         return true;
     }
 
+    
+    
     @Override
     public String toString() {
-        return "objetosNegocio.Tarea[ id=" + id + " ]";
+        return "Tarea{" + "titulo=" + titulo + ", descripcion=" + descripcion + '}';
     }
+
+
 
 }
