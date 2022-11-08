@@ -74,7 +74,7 @@ public class Temporizador extends javax.swing.JFrame {
                         SClip sonido = new SClip(rutaRelativa.toAbsolutePath().toString());
                         sonido.play();
                     } catch (Exception ex) {
-                        System.out.println("Ay la regue");
+                        System.out.println(ex.toString());
                     }
                 }
 
