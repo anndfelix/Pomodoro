@@ -61,11 +61,11 @@
                           <Component id="txtTemporizador" min="-2" pref="177" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="202" max="-2" attributes="0"/>
-                          <Component id="txtNumSesion" min="-2" pref="228" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="109" max="-2" attributes="0"/>
+                          <Component id="txtNumSesion" min="-2" pref="395" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace pref="171" max="32767" attributes="0"/>
+                  <EmptySpace pref="136" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -79,9 +79,9 @@
                   <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                   <Component id="txtNumSesion" min="-2" pref="41" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="btnIniciar" alignment="3" min="-2" pref="50" max="-2" attributes="0"/>
-                      <Component id="btnReiniciar" alignment="3" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="btnIniciar" pref="50" max="32767" attributes="0"/>
+                      <Component id="btnReiniciar" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="95" max="-2" attributes="0"/>
               </Group>

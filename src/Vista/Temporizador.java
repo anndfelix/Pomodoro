@@ -5,10 +5,13 @@
  */
 package Vista;
 
+import Modelo.SClip;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  *
@@ -18,9 +21,12 @@ public class Temporizador extends javax.swing.JFrame {
 
     private int iteracionSesiones = 0;
     private int sesion = 0;
-    private int maxSesiones = 3;
-    private int tiempoDescanso = 5; //segundos
-    private int tiempoSesion = 8; // Segundos
+    private int maxSesiones = 1;
+    private int tiempoDescansoLargo = 10; //segundos
+    private int tiempoDescansoAux = 7; //segundos
+    private int tiempoDescanso = tiempoDescansoAux; //segundos
+    private int tiempoSesionAux = 9; // Segundos
+    private int tiempoSesion = tiempoSesionAux; // Segundos
     private int tiempoTranscurrido = tiempoSesion * 1000; // Milisegundos
     private int h = tiempoTranscurrido / 3600000;
     private int m = (tiempoTranscurrido / 600000) % 60;
@@ -40,6 +46,7 @@ public class Temporizador extends javax.swing.JFrame {
         imprimeTemporizador();
         validaSesion();
         imprimeSesion();
+
     }
 
     private void imprimeTemporizador() {
@@ -60,9 +67,15 @@ public class Temporizador extends javax.swing.JFrame {
                 String m_string = String.format("%02d", m);
                 String s_string = String.format("%02d", s);
                 txtTemporizador.setText(h_string + ":" + m_string + ":" + s_string);
-                
+
                 if (h == 0 && m == 0 && s == 5) {
-                    //TODO
+                    try {
+                        Path rutaRelativa = Paths.get("src/iconos/Ding.wav");
+                        SClip sonido = new SClip(rutaRelativa.toAbsolutePath().toString());
+                        sonido.play();
+                    } catch (Exception ex) {
+                        System.out.println("Ay la regue");
+                    }
                 }
 
             } else {
@@ -167,9 +180,9 @@ public class Temporizador extends javax.swing.JFrame {
                         .addGap(227, 227, 227)
                         .addComponent(txtTemporizador, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(202, 202, 202)
-                        .addComponent(txtNumSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(171, Short.MAX_VALUE))
+                        .addGap(109, 109, 109)
+                        .addComponent(txtNumSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 395, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(136, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -181,8 +194,8 @@ public class Temporizador extends javax.swing.JFrame {
                 .addGap(32, 32, 32)
                 .addComponent(txtNumSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnIniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnIniciar, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
                     .addComponent(btnReiniciar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(95, 95, 95))
         );
@@ -228,7 +241,7 @@ public class Temporizador extends javax.swing.JFrame {
     }
 
     private void validaIteracionSesiones() {
-        if (iteracionSesiones < maxSesiones) {
+        if (iteracionSesiones < 3) {
             iteracionSesiones++;
         } else {
             iteracionSesiones = 0;
@@ -237,17 +250,17 @@ public class Temporizador extends javax.swing.JFrame {
     }
 
     private void imprimeSesion() {
-        if (iteracionSesiones < maxSesiones) {
+        if (iteracionSesiones < 3) {
             if (sesion == 0) {
                 txtNumSesion.setText("Sesion de descanso");
                 tiempoSesion = tiempoDescanso;
             } else {
                 txtNumSesion.setText("Sesion " + sesion + "/" + maxSesiones);
-                tiempoSesion = 3;
+                tiempoSesion = 9;
             }
         } else {
             txtNumSesion.setText("Sesion de descanso");
-            tiempoSesion = 7;
+            tiempoSesion = tiempoDescansoLargo;
             iteracionSesiones = 0;
         }
 
