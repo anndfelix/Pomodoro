@@ -133,6 +133,7 @@ public class PomodoroDlg extends javax.swing.JDialog {
     private void botonAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAceptarActionPerformed
         try {
             this.crearTarea();
+            tablaTareasPendientes();
         } catch (DAOException ex) {
             Logger.getLogger(PomodoroDlg.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -147,11 +148,7 @@ public class PomodoroDlg extends javax.swing.JDialog {
     }//GEN-LAST:event_botonCerrarActionPerformed
 
     private void botonContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonContinuarActionPerformed
-        try {
-            tablaTareasPendientes();
-        } catch (DAOException ex) {
-            Logger.getLogger(PomodoroDlg.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
     }//GEN-LAST:event_botonContinuarActionPerformed
 
     private void txtTituloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTituloActionPerformed
