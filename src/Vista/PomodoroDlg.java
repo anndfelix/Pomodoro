@@ -4,12 +4,22 @@ import Controlador.TareaDAO;
 import Exception.DAOException;
 import Modelo.Tarea;
 import Modelo.Usuario;
+import java.awt.Cursor;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.DnDConstants;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DropMode;
+import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.TransferHandler;
 import javax.swing.table.DefaultTableModel;
 
 public class PomodoroDlg extends javax.swing.JDialog {
@@ -148,7 +158,12 @@ public class PomodoroDlg extends javax.swing.JDialog {
     }//GEN-LAST:event_botonCerrarActionPerformed
 
     private void botonContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonContinuarActionPerformed
-
+        try {
+            InicioPomodoroDlg inicio = new InicioPomodoroDlg();
+            inicio.setVisible(true);
+        } catch (DAOException ex) {
+            Logger.getLogger(PomodoroDlg.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_botonContinuarActionPerformed
 
     private void txtTituloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTituloActionPerformed
@@ -180,25 +195,37 @@ public class PomodoroDlg extends javax.swing.JDialog {
         String titulo = this.txtTitulo.getText();
         String descripcion = this.txtContenido.getText();
         String estado = "Pendiente";
+        boolean existe = false;
 
-        Tarea tarea = new Tarea(titulo, descripcion);
+        ArrayList<Tarea> tareas = tdao.tareasRelaciones(user.getId());
 
-        Tarea tareaAgregar = new Tarea(titulo, new GregorianCalendar(), descripcion, estado, user);
+        Tarea tarea = new Tarea(titulo, new GregorianCalendar(), descripcion, estado, user);
 
-        if (descripcion.length() > 100) {
-            JOptionPane.showMessageDialog(this, "La descripcion debe tener max 100 caracteres.",
-                    "Error al agregar tarea", JOptionPane.ERROR_MESSAGE);
-        } else {
-            if (!descripcion.isEmpty() || !titulo.isEmpty()) {
-                tdao.insertar(tareaAgregar);
-                JOptionPane.showMessageDialog(this, ("Se ha agregado la tarea."),
-                        "Tarea agregada", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(this, "Debe llenar la informacion requerida.",
-                        "Error al agregar tarea", JOptionPane.ERROR_MESSAGE);
+        for (Tarea t : tareas) {
+            if(t.getDescripcion().equals(tarea.getDescripcion()) || t.getTitulo().equals(tarea.getTitulo())){
+                existe = true;
+                break;
             }
         }
-
+        
+        if (existe == true) {
+            JOptionPane.showMessageDialog(this, "Esta tarea ya esta agregada.",
+                    "Error al agregar tarea", JOptionPane.ERROR_MESSAGE);
+        } else {
+            if (descripcion.length() > 100) {
+                JOptionPane.showMessageDialog(this, "La descripcion debe tener max 100 caracteres.",
+                        "Error al agregar tarea", JOptionPane.ERROR_MESSAGE);
+            } else {
+                if (!descripcion.isEmpty() || !titulo.isEmpty()) {
+                    tdao.insertar(tarea);
+                    JOptionPane.showMessageDialog(this, ("Se ha agregado la tarea."),
+                            "Tarea agregada", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Debe llenar la informacion requerida.",
+                            "Error al agregar tarea", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -214,4 +241,5 @@ public class PomodoroDlg extends javax.swing.JDialog {
     private javax.swing.JTextArea txtContenido;
     private javax.swing.JTextField txtTitulo;
     // End of variables declaration//GEN-END:variables
+
 }

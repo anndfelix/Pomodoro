@@ -2,7 +2,6 @@ package Controlador;
 
 import Exception.DAOException;
 import Modelo.Usuario;
-import Vista.PrincipalDlg;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;

@@ -140,6 +140,7 @@ public class Tarea implements Serializable {
 
     
     
+    
     @Override
     public String toString() {
         return "Tarea{" + "titulo=" + titulo + ", descripcion=" + descripcion + '}';
