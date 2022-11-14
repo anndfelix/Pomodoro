@@ -2,25 +2,16 @@ package Controlador;
 
 import Exception.*;
 import java.util.ArrayList;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import java.sql.*;
 
 public abstract class BaseDAO<T> {
 
-    public EntityManager generarConexion() throws DAOException {
+    private static String user = "root";
+    private static String pass = "password";
+    private static String cadenaConexion = "jdbc:mysql://localhost/pomodorobd";
 
-        Persistence p = new Persistence();
-
-        try {
-            EntityManagerFactory emf = p.createEntityManagerFactory("PomodoroPU");
-            EntityManager em = emf.createEntityManager();
-            return em;
-
-        } catch (Exception ex) {
-            System.err.println(ex.getMessage());
-            throw new DAOException(ex.getMessage(), ex);
-        }
+    protected Connection generarConexion() throws SQLException {
+        return DriverManager.getConnection(cadenaConexion, user, pass);
     }
 
     public abstract ArrayList<T> consultar() throws DAOException;
@@ -29,7 +20,7 @@ public abstract class BaseDAO<T> {
 
     public abstract void actualizar(T entidad) throws DAOException;
 
-    public abstract T consultarID(Long id) throws DAOException;
+    public abstract T consultarID(T entidad) throws DAOException;
 
-    public abstract void eliminar(Long id) throws DAOException;
+    public abstract void eliminar(T entidad) throws DAOException;
 }
