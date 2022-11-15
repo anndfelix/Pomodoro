@@ -8,6 +8,8 @@ package Vista;
 import Modelo.SClip;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import java.nio.file.Path;
@@ -130,6 +132,7 @@ public class Temporizador extends javax.swing.JFrame {
                 iniciarTemporizador();
             } else if (opcion == JOptionPane.NO_OPTION) {
                 JOptionPane.showMessageDialog(null, "No te rindas, ¡suerte en tu proxima sesion!");
+                dispose();
             }
             
         }
@@ -152,7 +155,7 @@ public class Temporizador extends javax.swing.JFrame {
         txtNumSesion = new javax.swing.JLabel();
         txtNumDescanso = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(102, 102, 102));
 
@@ -338,6 +341,19 @@ public class Temporizador extends javax.swing.JFrame {
         this.btnIniciar.setText("Iniciar");
         iniciarPresionado = false;
     }
+    
+//    public void cerrar(){
+//        try {
+//            addWindowListener(new WindowAdapter(){
+//                public void windowClosing(WindowEvent e){
+//                    
+//                }
+//            });
+//            this.setVisible(true);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
     
     /**
      * @param args the command line arguments

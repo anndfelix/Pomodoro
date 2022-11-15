@@ -26,6 +26,7 @@ public class PomodoroDlg extends javax.swing.JDialog {
 
     public PomodoroDlg() {
         try {
+            tasksTerminadas = new ArrayList();
             initComponents();
             tareasPendientes();
             tareasEnProgreso();
@@ -198,6 +199,8 @@ public class PomodoroDlg extends javax.swing.JDialog {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         try {
+                            Temporizador temporizador = new Temporizador();
+                            temporizador.setVisible(true);
                             task.setEstado("En progreso");
                             tdao.actualizar(task);
                             tareasEnProgreso();
@@ -258,7 +261,7 @@ public class PomodoroDlg extends javax.swing.JDialog {
     }
 
     private void tareasEnProgreso() throws DAOException {
-
+        
         List<Task> tareas = tdao.consultar();
 
         panelProgreso.setText("");
@@ -316,7 +319,8 @@ public class PomodoroDlg extends javax.swing.JDialog {
                 botonIniciar.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-
+                        Temporizador temporizador = new Temporizador();
+                        temporizador.setVisible(true);
                     }
                 });
 
