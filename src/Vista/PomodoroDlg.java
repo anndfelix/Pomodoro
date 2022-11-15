@@ -33,6 +33,8 @@ public class PomodoroDlg extends javax.swing.JDialog {
             tareasEnProgreso();
             tareasTerminadas();
             setLocationRelativeTo(null);
+            TextPrompt ph1 = new TextPrompt("Nombre de la tarea", txtTitulo);
+            TextPrompt ph2 = new TextPrompt("Descripcion de la tarea", txtContenido);
         } catch (DAOException ex) {
             Logger.getLogger(PomodoroDlg.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -139,7 +141,7 @@ public class PomodoroDlg extends javax.swing.JDialog {
     }//GEN-LAST:event_botonLimpiarActionPerformed
 
     private void txtTituloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTituloActionPerformed
-
+        
     }//GEN-LAST:event_txtTituloActionPerformed
 
     private void limpiar() {
