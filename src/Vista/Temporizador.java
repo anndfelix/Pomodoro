@@ -8,8 +8,6 @@ package Vista;
 import Modelo.SClip;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import java.nio.file.Path;
@@ -48,7 +46,7 @@ public class Temporizador extends javax.swing.JFrame {
         imprimeTemporizador();
         validaSesion();
         imprimeSesion();
-
+        iniciarTemporizador();
     }
 
     /**
@@ -341,19 +339,6 @@ public class Temporizador extends javax.swing.JFrame {
         this.btnIniciar.setText("Iniciar");
         iniciarPresionado = false;
     }
-    
-//    public void cerrar(){
-//        try {
-//            addWindowListener(new WindowAdapter(){
-//                public void windowClosing(WindowEvent e){
-//                    
-//                }
-//            });
-//            this.setVisible(true);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
     
     /**
      * @param args the command line arguments
