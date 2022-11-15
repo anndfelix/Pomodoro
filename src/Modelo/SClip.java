@@ -29,7 +29,7 @@ public class SClip {
 
         //acquire audio format and create a DataLine.Info object
         AudioFormat format = audioStream.getFormat();
-        var info = new DataLine.Info(Clip.class, format);
+        //var info = new DataLine.Info(Clip.class, format);
 
         //obtain the Clip
         try {
