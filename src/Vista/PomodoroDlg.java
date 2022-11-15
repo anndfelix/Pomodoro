@@ -3,6 +3,7 @@ package Vista;
 import Controlador.TaskDAO;
 import Exception.DAOException;
 import Modelo.Task;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
@@ -120,6 +121,7 @@ public class PomodoroDlg extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+
     private void botonAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAceptarActionPerformed
         try {
             this.crearTarea();
@@ -194,13 +196,12 @@ public class PomodoroDlg extends javax.swing.JDialog {
 
             if (task.getEstado().equals("Pendiente")) {
                 JButton botonPendiente = new JButton("Iniciar");
+                JButton botonEliminar = new JButton("Eliminar");
 
                 botonPendiente.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         try {
-                            Temporizador temporizador = new Temporizador();
-                            temporizador.setVisible(true);
                             task.setEstado("En progreso");
                             tdao.actualizar(task);
                             tareasEnProgreso();
@@ -211,11 +212,27 @@ public class PomodoroDlg extends javax.swing.JDialog {
                     }
                 });
 
+                botonEliminar.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        try {
+                            tdao.eliminar(task);
+                            tareasEnProgreso();
+                            tareasPendientes();
+                            tareasTerminadas();
+                            JOptionPane.showMessageDialog(null, ("Se ha eliminado la tarea."),
+                                    "Tarea eliminada con éxito", JOptionPane.INFORMATION_MESSAGE);
+                        } catch (DAOException ex) {
+                        }
+                    }
+                });
+
                 try {
                     doc.insertString(doc.getLength(), task.toString(), null);
                     doc.insertString(doc.getLength(), "\n", null);
                     panelPendientes.setCaretPosition(panelPendientes.getDocument().getLength());
                     panelPendientes.insertComponent(botonPendiente);
+                    panelPendientes.insertComponent(botonEliminar);
                     doc.insertString(doc.getLength(), "\n", null);
                     doc.insertString(doc.getLength(), "\n", null);
 
@@ -239,15 +256,32 @@ public class PomodoroDlg extends javax.swing.JDialog {
         for (Task task : tareas) {
 
             if (task.getEstado().equals("Terminada")) {
+                JButton botonEliminar = new JButton("Eliminar");
 
                 String taskString = "Titulo: " + task.getTitulo()
                         + "\nDescripcion: " + task.getDescripcion()
                         + "\n" + task.getFecha().toString();
 
+                botonEliminar.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        try {
+                            tdao.eliminar(task);
+                            tareasEnProgreso();
+                            tareasPendientes();
+                            tareasTerminadas();
+                            JOptionPane.showMessageDialog(null, ("Se ha eliminado la tarea."),
+                                    "Tarea eliminada con éxito", JOptionPane.INFORMATION_MESSAGE);
+                        } catch (DAOException ex) {
+                        }
+                    }
+                });
+
                 try {
                     doc.insertString(doc.getLength(), taskString, null);
                     doc.insertString(doc.getLength(), "\n", null);
                     panelTerminadas.setCaretPosition(panelTerminadas.getDocument().getLength());
+                    panelTerminadas.insertComponent(botonEliminar);
                     doc.insertString(doc.getLength(), "\n", null);
                     doc.insertString(doc.getLength(), "\n", null);
 
@@ -261,7 +295,7 @@ public class PomodoroDlg extends javax.swing.JDialog {
     }
 
     private void tareasEnProgreso() throws DAOException {
-        
+
         List<Task> tareas = tdao.consultar();
 
         panelProgreso.setText("");
@@ -274,6 +308,7 @@ public class PomodoroDlg extends javax.swing.JDialog {
                 JButton botonPendiente = new JButton("Regresar");
                 JButton botonTerminar = new JButton("Terminar");
                 JButton botonIniciar = new JButton("Iniciar");
+                JButton botonEliminar = new JButton("Eliminar");
 
                 botonTerminar.addActionListener(new ActionListener() {
                     @Override
@@ -324,6 +359,21 @@ public class PomodoroDlg extends javax.swing.JDialog {
                     }
                 });
 
+                botonEliminar.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        try {
+                            tdao.eliminar(task);
+                            tareasEnProgreso();
+                            tareasPendientes();
+                            tareasTerminadas();
+                            JOptionPane.showMessageDialog(null, ("Se ha eliminado la tarea."),
+                                    "Tarea eliminada con éxito", JOptionPane.INFORMATION_MESSAGE);
+                        } catch (DAOException ex) {
+                        }
+                    }
+                });
+
                 try {
                     doc.insertString(doc.getLength(), task.toString(), null);
                     doc.insertString(doc.getLength(), "\n", null);
@@ -331,6 +381,8 @@ public class PomodoroDlg extends javax.swing.JDialog {
                     panelProgreso.insertComponent(botonPendiente);
                     panelProgreso.insertComponent(botonTerminar);
                     panelProgreso.insertComponent(botonIniciar);
+                    doc.insertString(doc.getLength(), "\n", null);
+                    panelProgreso.insertComponent(botonEliminar);
                     doc.insertString(doc.getLength(), "\n", null);
                     doc.insertString(doc.getLength(), "\n", null);
 
