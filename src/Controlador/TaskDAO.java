@@ -71,10 +71,9 @@ public class TaskDAO extends BaseDAO<Task> {
             Connection conexion = this.generarConexion();
             Statement comando = conexion.createStatement();
             String codigoSQL = String.format(
-                    "UPDATE tareas SET titulo='%s',descripcion='%s', estado='%s', fecha= CURRENT_TIMESTAMP WHERE id_tarea='%d'",
+                    "UPDATE tareas SET titulo='%s',descripcion='%s' WHERE id_tarea='%d'",
                     tarea.getTitulo(),
                     tarea.getDescripcion(),
-                    tarea.getEstado(),
                     tarea.getId_tarea()
             );
 

@@ -19,6 +19,11 @@ public class Task {
         this.id_tarea = id_tarea;
     }
 
+    public Task(String titulo, String descripcion) {
+        this.titulo = titulo;
+        this.descripcion = descripcion;
+    }
+
     public Task(Integer id_tarea, String titulo, Timestamp fecha, String estado, String descripcion) {
         this.id_tarea = id_tarea;
         this.titulo = titulo;

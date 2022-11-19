@@ -35,6 +35,10 @@ public class PomodoroDlg extends javax.swing.JDialog {
             setLocationRelativeTo(null);
             TextPrompt ph1 = new TextPrompt("Nombre de la tarea", txtTitulo);
             TextPrompt ph2 = new TextPrompt("Descripcion de la tarea", txtContenido);
+
+            ph1.changeAlpha(0.45f);
+            ph2.changeAlpha(0.45f);
+
         } catch (DAOException ex) {
             Logger.getLogger(PomodoroDlg.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -56,6 +60,7 @@ public class PomodoroDlg extends javax.swing.JDialog {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        txtId = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -109,6 +114,9 @@ public class PomodoroDlg extends javax.swing.JDialog {
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/enprogreso.png"))); // NOI18N
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 80, 150, 20));
 
+        txtId.setForeground(new java.awt.Color(0, 0, 0));
+        jPanel1.add(txtId, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 200, 90, 30));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -141,7 +149,7 @@ public class PomodoroDlg extends javax.swing.JDialog {
     }//GEN-LAST:event_botonLimpiarActionPerformed
 
     private void txtTituloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTituloActionPerformed
-        
+
     }//GEN-LAST:event_txtTituloActionPerformed
 
     private void limpiar() {
@@ -160,14 +168,17 @@ public class PomodoroDlg extends javax.swing.JDialog {
         Task task = new Task(titulo, Timestamp.from(Instant.MIN), estado, descripcion);
 
         for (Task t : tareas) {
-            if (t.getDescripcion().equals(task.getDescripcion()) || t.getTitulo().equals(task.getTitulo())) {
-                existe = true;
-                break;
+
+            if (!t.getEstado().equals("Terminada")) {
+                if (t.getDescripcion().equals(task.getDescripcion()) || t.getTitulo().equals(task.getTitulo())) {
+                    existe = true;
+                    break;
+                }
             }
         }
 
         if (existe == true) {
-            JOptionPane.showMessageDialog(this, "Esta tarea ya esta agregada.",
+            JOptionPane.showMessageDialog(this, "Esta tarea ya esta existe.",
                     "Error al agregar tarea", JOptionPane.ERROR_MESSAGE);
         } else {
             if (descripcion.length() > 100) {
@@ -199,6 +210,7 @@ public class PomodoroDlg extends javax.swing.JDialog {
             if (task.getEstado().equals("Pendiente")) {
                 JButton botonPendiente = new JButton("Iniciar");
                 JButton botonEliminar = new JButton("Eliminar");
+                JButton botonModificar = new JButton("Modificar");
 
                 botonPendiente.addActionListener(new ActionListener() {
                     @Override
@@ -218,14 +230,33 @@ public class PomodoroDlg extends javax.swing.JDialog {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         try {
-                            tdao.eliminar(task);
-                            tareasEnProgreso();
-                            tareasPendientes();
-                            tareasTerminadas();
-                            JOptionPane.showMessageDialog(null, ("Se ha eliminado la tarea."),
-                                    "Tarea eliminada con éxito", JOptionPane.INFORMATION_MESSAGE);
+
+                            int confirmar = JOptionPane.showConfirmDialog(null, "¿Desea eliminar la tarea? ");
+
+                            if (JOptionPane.OK_OPTION == confirmar) {
+
+                                tdao.eliminar(task);
+                                tareasEnProgreso();
+                                tareasPendientes();
+                                tareasTerminadas();
+
+                                JOptionPane.showMessageDialog(null, ("Se ha eliminado la tarea."), "Tarea eliminada con éxito", JOptionPane.INFORMATION_MESSAGE);
+                            }
+
                         } catch (DAOException ex) {
+                            Logger.getLogger(PomodoroDlg.class.getName()).log(Level.SEVERE, null, ex);
                         }
+                    }
+                });
+
+                botonModificar.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+
+                        txtTitulo.setText(task.getTitulo());
+                        txtContenido.setText(task.getDescripcion());
+                        txtContenido.setEditable(false);
+
                     }
                 });
 
@@ -234,6 +265,7 @@ public class PomodoroDlg extends javax.swing.JDialog {
                     doc.insertString(doc.getLength(), "\n", null);
                     panelPendientes.setCaretPosition(panelPendientes.getDocument().getLength());
                     panelPendientes.insertComponent(botonPendiente);
+                    panelPendientes.insertComponent(botonModificar);
                     panelPendientes.insertComponent(botonEliminar);
                     doc.insertString(doc.getLength(), "\n", null);
                     doc.insertString(doc.getLength(), "\n", null);
@@ -244,7 +276,8 @@ public class PomodoroDlg extends javax.swing.JDialog {
             }
         }
 
-        panelPendientes.setEditable(false);
+        panelPendientes.setEditable(
+                false);
     }
 
     private void tareasTerminadas() throws DAOException {
@@ -252,38 +285,20 @@ public class PomodoroDlg extends javax.swing.JDialog {
         List<Task> tareas = tdao.consultarFechasAscendente();
 
         panelTerminadas.setText("");
-
         StyledDocument doc = panelTerminadas.getStyledDocument();
 
         for (Task task : tareas) {
 
             if (task.getEstado().equals("Terminada")) {
-                JButton botonEliminar = new JButton("Eliminar");
 
                 String taskString = "Titulo: " + task.getTitulo()
                         + "\nDescripcion: " + task.getDescripcion()
                         + "\n" + task.getFecha().toString();
 
-                botonEliminar.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        try {
-                            tdao.eliminar(task);
-                            tareasEnProgreso();
-                            tareasPendientes();
-                            tareasTerminadas();
-                            JOptionPane.showMessageDialog(null, ("Se ha eliminado la tarea."),
-                                    "Tarea eliminada con éxito", JOptionPane.INFORMATION_MESSAGE);
-                        } catch (DAOException ex) {
-                        }
-                    }
-                });
-
                 try {
                     doc.insertString(doc.getLength(), taskString, null);
                     doc.insertString(doc.getLength(), "\n", null);
                     panelTerminadas.setCaretPosition(panelTerminadas.getDocument().getLength());
-                    panelTerminadas.insertComponent(botonEliminar);
                     doc.insertString(doc.getLength(), "\n", null);
                     doc.insertString(doc.getLength(), "\n", null);
 
@@ -311,6 +326,7 @@ public class PomodoroDlg extends javax.swing.JDialog {
                 JButton botonTerminar = new JButton("Terminar");
                 JButton botonIniciar = new JButton("Iniciar");
                 JButton botonEliminar = new JButton("Eliminar");
+                JButton botonModificar = new JButton("Modificar");
 
                 botonTerminar.addActionListener(new ActionListener() {
                     @Override
@@ -329,10 +345,12 @@ public class PomodoroDlg extends javax.swing.JDialog {
 
                                 JOptionPane.showMessageDialog(null, ("Se ha terminado la tarea."),
                                         "Tarea terminada", JOptionPane.INFORMATION_MESSAGE);
+
                             }
 
                         } catch (DAOException ex) {
-                            Logger.getLogger(PomodoroDlg.class.getName()).log(Level.SEVERE, null, ex);
+                            Logger.getLogger(PomodoroDlg.class
+                                    .getName()).log(Level.SEVERE, null, ex);
                         }
                     }
                 });
@@ -341,14 +359,16 @@ public class PomodoroDlg extends javax.swing.JDialog {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         try {
+
                             task.setEstado("Pendiente");
                             tdao.actualizar(task);
-                            JOptionPane.showMessageDialog(null, ("Se ha regresado la tarea."),
-                                    "Tarea pendiente", JOptionPane.INFORMATION_MESSAGE);
+                            JOptionPane.showMessageDialog(null, ("Se ha regresado la tarea."), "Tarea pendiente", JOptionPane.INFORMATION_MESSAGE);
                             tareasPendientes();
                             tareasEnProgreso();
+
                         } catch (DAOException ex) {
-                            Logger.getLogger(PomodoroDlg.class.getName()).log(Level.SEVERE, null, ex);
+                            Logger.getLogger(PomodoroDlg.class
+                                    .getName()).log(Level.SEVERE, null, ex);
                         }
                     }
                 });
@@ -364,14 +384,24 @@ public class PomodoroDlg extends javax.swing.JDialog {
                 botonEliminar.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
+
                         try {
-                            tdao.eliminar(task);
-                            tareasEnProgreso();
-                            tareasPendientes();
-                            tareasTerminadas();
-                            JOptionPane.showMessageDialog(null, ("Se ha eliminado la tarea."),
-                                    "Tarea eliminada con éxito", JOptionPane.INFORMATION_MESSAGE);
+                            int confirmar = JOptionPane.showConfirmDialog(null, "¿Desea eliminar la tarea? ");
+
+                            if (JOptionPane.OK_OPTION == confirmar) {
+
+                                tdao.eliminar(task);
+                                tareasEnProgreso();
+                                tareasPendientes();
+                                tareasTerminadas();
+
+                                JOptionPane.showMessageDialog(null, ("Se ha eliminado la tarea."), "Tarea eliminada con éxito", JOptionPane.INFORMATION_MESSAGE);
+
+                            }
+
                         } catch (DAOException ex) {
+                            Logger.getLogger(PomodoroDlg.class
+                                    .getName()).log(Level.SEVERE, null, ex);
                         }
                     }
                 });
@@ -381,9 +411,10 @@ public class PomodoroDlg extends javax.swing.JDialog {
                     doc.insertString(doc.getLength(), "\n", null);
                     panelProgreso.setCaretPosition(panelProgreso.getDocument().getLength());
                     panelProgreso.insertComponent(botonPendiente);
-                    panelProgreso.insertComponent(botonTerminar);
                     panelProgreso.insertComponent(botonIniciar);
+                    panelProgreso.insertComponent(botonModificar);
                     doc.insertString(doc.getLength(), "\n", null);
+                    panelProgreso.insertComponent(botonTerminar);
                     panelProgreso.insertComponent(botonEliminar);
                     doc.insertString(doc.getLength(), "\n", null);
                     doc.insertString(doc.getLength(), "\n", null);
@@ -408,16 +439,24 @@ public class PomodoroDlg extends javax.swing.JDialog {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Temporizador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Temporizador.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Temporizador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Temporizador.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Temporizador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Temporizador.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Temporizador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Temporizador.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -441,6 +480,7 @@ public class PomodoroDlg extends javax.swing.JDialog {
     private javax.swing.JTextPane panelProgreso;
     private javax.swing.JTextPane panelTerminadas;
     private javax.swing.JTextArea txtContenido;
+    private javax.swing.JLabel txtId;
     private javax.swing.JTextField txtTitulo;
     // End of variables declaration//GEN-END:variables
 

@@ -15,7 +15,7 @@ public abstract class BaseDAO<T> {
     
     //POLLO
     private static String user = "root";
-    private static String pass = "root";
+    private static String pass = "password";
     private static String cadenaConexion = "jdbc:mysql://localhost/pomodorobd";
     
 
