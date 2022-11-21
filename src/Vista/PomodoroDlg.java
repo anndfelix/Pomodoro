@@ -23,11 +23,9 @@ import javax.swing.text.StyledDocument;
 public class PomodoroDlg extends javax.swing.JDialog {
 
     TaskDAO tdao = new TaskDAO();
-    static ArrayList<Task> tasksTerminadas;
 
     public PomodoroDlg() {
         try {
-            tasksTerminadas = new ArrayList();
             initComponents();
             tareasPendientes();
             tareasEnProgreso();
@@ -190,6 +188,7 @@ public class PomodoroDlg extends javax.swing.JDialog {
         ArrayList<Task> tareas = tdao.consultar();
 
         Task task = new Task(titulo, Timestamp.from(Instant.MIN), estado, descripcion);
+        task.setFechaProgreso(Timestamp.from(Instant.MIN));
 
         for (Task t : tareas) {
 
@@ -231,7 +230,7 @@ public class PomodoroDlg extends javax.swing.JDialog {
         ArrayList<Task> tareas = tdao.consultar();
 
         Task task = new Task(id, titulo, Timestamp.from(Instant.MIN), estado, descripcion);
-
+        task.setFechaProgreso(Timestamp.from(Instant.MIN));
         for (Task t : tareas) {
 
             if (!t.getEstado().equals("Terminada")) {
@@ -367,7 +366,7 @@ public class PomodoroDlg extends javax.swing.JDialog {
 
                 String taskString = "Titulo: " + task.getTitulo()
                         + "\nDescripcion: " + task.getDescripcion()
-                        + "\n" + task.getFecha().toString();
+                        + "\n" + task.getFechaTerminada().toString();
 
                 try {
                     doc.insertString(doc.getLength(), taskString, null);
@@ -387,7 +386,7 @@ public class PomodoroDlg extends javax.swing.JDialog {
 
     private void tareasEnProgreso() throws DAOException {
 
-        List<Task> tareas = tdao.consultar();
+        List<Task> tareas = tdao.consultarFechasAscendenteProgreso();
 
         panelProgreso.setText("");
 
@@ -413,7 +412,6 @@ public class PomodoroDlg extends javax.swing.JDialog {
                             if (JOptionPane.OK_OPTION == confirmar) {
                                 task.setEstado("Terminada");
                                 tdao.actualizar(task);
-                                tasksTerminadas.add(task);
                                 tareasTerminadas();
                                 tareasEnProgreso();
 
