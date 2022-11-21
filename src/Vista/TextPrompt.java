@@ -77,6 +77,7 @@ public class TextPrompt extends JLabel
 
 		Color withAlpha = new Color(red, green, blue, alpha);
 		super.setForeground( withAlpha );
+                
 	}
 
 	/**

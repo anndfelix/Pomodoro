@@ -18,7 +18,7 @@ public class TaskDAO extends BaseDAO<Task> {
         try {
             Connection conexion = this.generarConexion();
             Statement comando = conexion.createStatement();
-            ResultSet resultado = comando.executeQuery("SELECT id_tarea,titulo,descripcion,estado,fecha FROM tareas");
+            ResultSet resultado = comando.executeQuery("SELECT id_tarea,titulo,descripcion,estado,fecha_terminada FROM tareas");
 
             while (resultado.next()) {
 
@@ -26,7 +26,8 @@ public class TaskDAO extends BaseDAO<Task> {
 
                 task.setId_tarea(resultado.getInt("id_tarea"));
                 task.setTitulo(resultado.getString("titulo"));
-                task.setFecha(resultado.getTimestamp("fecha"));
+                task.setFechaTerminada(resultado.getTimestamp("fecha_terminada"));
+
                 task.setEstado(resultado.getString("estado"));
                 task.setDescripcion(resultado.getString("descripcion"));
 
@@ -47,7 +48,7 @@ public class TaskDAO extends BaseDAO<Task> {
         try {
             Connection conexion = this.generarConexion();
             Statement comando = conexion.createStatement();
-            comando.executeUpdate(String.format("INSERT INTO tareas(titulo,descripcion,estado,fecha) VALUES ('%s','%s','%s',CURRENT_TIMESTAMP)", tarea.getTitulo(), tarea.getDescripcion(), tarea.getEstado()));
+            comando.executeUpdate(String.format("INSERT INTO tareas(titulo,descripcion,estado,fecha_terminada,fecha_progreso) VALUES ('%s','%s','%s',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)", tarea.getTitulo(), tarea.getDescripcion(), tarea.getEstado()));
 
             conexion.close();
             System.out.println("Se registro la tarea!");
@@ -71,19 +72,15 @@ public class TaskDAO extends BaseDAO<Task> {
             Connection conexion = this.generarConexion();
             Statement comando = conexion.createStatement();
             String codigoSQL = String.format(
-                    "UPDATE tareas SET titulo='%s',descripcion='%s', estado='%s', fecha= CURRENT_TIMESTAMP WHERE id_tarea='%d'",
+                    "UPDATE tareas SET titulo='%s',descripcion='%s',estado ='%s',fecha_terminada = CURRENT_TIMESTAMP,fecha_progreso = CURRENT_TIMESTAMP WHERE id_tarea='%d'",
                     tarea.getTitulo(),
                     tarea.getDescripcion(),
                     tarea.getEstado(),
                     tarea.getId_tarea()
             );
 
-            int conteoRegistrosAfectados = comando.executeUpdate(codigoSQL);
-            if (conteoRegistrosAfectados == 1) {
-                System.out.println("Se actualizó la tarea");
-            } else {
-                System.out.println("No se pudo actualizar la tarea");
-            }
+            comando.executeUpdate(codigoSQL);
+
         } catch (SQLException ex) {
             System.err.println(ex.getMessage());
         }
@@ -98,7 +95,7 @@ public class TaskDAO extends BaseDAO<Task> {
         try {
             Connection conexion = this.generarConexion();
             Statement comando = conexion.createStatement();
-            ResultSet resultado = comando.executeQuery(String.format("SELECT id_tarea,titulo,descripcion,estado,fecha FROM tareas WHERE id_tarea = %d", tarea.getId_tarea()));
+            ResultSet resultado = comando.executeQuery(String.format("SELECT id_tarea,titulo,descripcion,estado,fecha_terminada FROM tareas WHERE id_tarea = %d", tarea.getId_tarea()));
 
             while (resultado.next()) {
 
@@ -106,7 +103,7 @@ public class TaskDAO extends BaseDAO<Task> {
 
                 task.setId_tarea(resultado.getInt("id_tarea"));
                 task.setTitulo(resultado.getString("titulo"));
-                task.setFecha(resultado.getTimestamp("fecha"));
+                task.setFechaTerminada(resultado.getTimestamp("fecha_terminada"));
                 task.setEstado(resultado.getString("estado"));
                 task.setDescripcion(resultado.getString("descripcion"));
 
@@ -157,7 +154,7 @@ public class TaskDAO extends BaseDAO<Task> {
         try {
             Connection conexion = this.generarConexion();
             Statement comando = conexion.createStatement();
-            ResultSet resultado = comando.executeQuery("SELECT id_tarea,titulo,descripcion,estado,fecha FROM tareas ORDER BY fecha ASC");
+            ResultSet resultado = comando.executeQuery("SELECT id_tarea,titulo,descripcion,estado,fecha_terminada FROM tareas ORDER BY fecha_terminada ASC");
 
             while (resultado.next()) {
 
@@ -165,7 +162,38 @@ public class TaskDAO extends BaseDAO<Task> {
 
                 task.setId_tarea(resultado.getInt("id_tarea"));
                 task.setTitulo(resultado.getString("titulo"));
-                task.setFecha(resultado.getTimestamp("fecha"));
+                task.setFechaTerminada(resultado.getTimestamp("fecha_terminada"));
+                task.setEstado(resultado.getString("estado"));
+                task.setDescripcion(resultado.getString("descripcion"));
+
+                listaTasks.add(task);
+            }
+            conexion.close();
+            return listaTasks;
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            return listaTasks;
+        }
+
+    }
+
+    public ArrayList<Task> consultarFechasAscendenteProgreso() {
+
+        ArrayList<Task> listaTasks = new ArrayList<>();
+
+        try {
+            Connection conexion = this.generarConexion();
+            Statement comando = conexion.createStatement();
+            ResultSet resultado = comando.executeQuery("SELECT id_tarea,titulo,descripcion,estado,fecha_progreso FROM tareas ORDER BY fecha_progreso ASC");
+
+            while (resultado.next()) {
+
+                Task task = new Task();
+
+                task.setId_tarea(resultado.getInt("id_tarea"));
+                task.setTitulo(resultado.getString("titulo"));
+                task.setFechaProgreso(resultado.getTimestamp("fecha_progreso"));
                 task.setEstado(resultado.getString("estado"));
                 task.setDescripcion(resultado.getString("descripcion"));
 

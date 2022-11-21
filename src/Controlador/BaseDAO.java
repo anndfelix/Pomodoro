@@ -6,9 +6,18 @@ import java.sql.*;
 
 public abstract class BaseDAO<T> {
 
+    //CARLOS
+    /*
     private static String user = "root";
     private static String pass = "Carlosalv089";
     private static String cadenaConexion = "jdbc:mysql://localhost/pomodorobd";
+    */
+    
+    //POLLO
+    private static String user = "root";
+    private static String pass = "password";
+    private static String cadenaConexion = "jdbc:mysql://localhost/pomodorobd";
+    
 
     protected Connection generarConexion() throws SQLException {
         return DriverManager.getConnection(cadenaConexion, user, pass);

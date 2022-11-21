@@ -1,14 +1,14 @@
 package Modelo;
 
 import java.sql.Timestamp;
-import java.util.Calendar;
 
 
 public class Task {
 
     private Integer id_tarea;
     private String titulo;
-    private Timestamp fecha;
+    private Timestamp fecha_terminada;
+    private Timestamp fecha_progreso;
     private String estado;
     private String descripcion;
 
@@ -19,17 +19,22 @@ public class Task {
         this.id_tarea = id_tarea;
     }
 
-    public Task(Integer id_tarea, String titulo, Timestamp fecha, String estado, String descripcion) {
+    public Task(String titulo, String descripcion) {
+        this.titulo = titulo;
+        this.descripcion = descripcion;
+    }
+
+    public Task(Integer id_tarea, String titulo, Timestamp fecha_terminada, String estado, String descripcion) {
         this.id_tarea = id_tarea;
         this.titulo = titulo;
-        this.fecha = fecha;
+        this.fecha_terminada = fecha_terminada;
         this.estado = estado;
         this.descripcion = descripcion;
     }
 
-    public Task(String titulo, Timestamp fecha, String estado, String descripcion) {
+    public Task(String titulo, Timestamp fecha_terminada, String estado, String descripcion) {
         this.titulo = titulo;
-        this.fecha = fecha;
+        this.fecha_terminada = fecha_terminada;
         this.estado = estado;
         this.descripcion = descripcion;
     }
@@ -58,12 +63,12 @@ public class Task {
         this.titulo = titulo;
     }
 
-    public Timestamp getFecha() {
-        return fecha;
+    public Timestamp getFechaTerminada() {
+        return fecha_terminada;
     }
 
-    public void setFecha(Timestamp fecha) {
-        this.fecha = fecha;
+    public void setFechaTerminada(Timestamp fecha) {
+        this.fecha_terminada = fecha;
     }
 
     public String getEstado() {
@@ -73,6 +78,16 @@ public class Task {
     public void setEstado(String estado) {
         this.estado = estado;
     }
+
+    public Timestamp getFechaProgreso() {
+        return fecha_progreso;
+    }
+
+    public void setFechaProgreso(Timestamp fecha_progreso) {
+        this.fecha_progreso = fecha_progreso;
+    }
+    
+    
 
     @Override
     public String toString() {
