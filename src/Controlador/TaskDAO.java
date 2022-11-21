@@ -77,12 +77,8 @@ public class TaskDAO extends BaseDAO<Task> {
                     tarea.getId_tarea()
             );
 
-            int conteoRegistrosAfectados = comando.executeUpdate(codigoSQL);
-            if (conteoRegistrosAfectados == 1) {
-                System.out.println("Se actualizó la tarea");
-            } else {
-                System.out.println("No se pudo actualizar la tarea");
-            }
+            comando.executeUpdate(codigoSQL);
+
         } catch (SQLException ex) {
             System.err.println(ex.getMessage());
         }

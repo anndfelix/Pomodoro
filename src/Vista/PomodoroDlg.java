@@ -133,12 +133,21 @@ public class PomodoroDlg extends javax.swing.JDialog {
 
 
     private void botonAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAceptarActionPerformed
+
         try {
-            this.crearTarea();
+
+            if (!txtId.getText().isEmpty()) {
+                this.actualizarTarea();
+            } else {
+                this.crearTarea();
+            }
+
             limpiar();
             tareasPendientes();
             tareasEnProgreso();
             tareasTerminadas();
+            this.txtContenido.setEditable(true);
+
         } catch (DAOException ex) {
             Logger.getLogger(PomodoroDlg.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -155,6 +164,7 @@ public class PomodoroDlg extends javax.swing.JDialog {
     private void limpiar() {
         this.txtContenido.setText("");
         this.txtTitulo.setText("");
+        this.txtId.setText("");
     }
 
     private void crearTarea() throws DAOException {
@@ -192,6 +202,53 @@ public class PomodoroDlg extends javax.swing.JDialog {
                 } else {
                     JOptionPane.showMessageDialog(this, "Debe llenar la informacion requerida.",
                             "Error al agregar tarea", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+    }
+
+    private void actualizarTarea() throws DAOException {
+        Integer id = Integer.parseInt(this.txtId.getText());
+        String titulo = this.txtTitulo.getText();
+        String descripcion = this.txtContenido.getText();
+        boolean existe = false;
+
+        ArrayList<Task> tareas = tdao.consultar();
+
+        Task task = new Task(id, titulo, Timestamp.from(Instant.MIN), titulo, descripcion);
+
+        for (Task t : tareas) {
+
+            if (!t.getEstado().equals("Terminada")) {
+                if (t.getTitulo().equals(task.getTitulo())) {
+                    existe = true;
+                    break;
+                }
+            }
+        }
+
+        if (existe == true) {
+            JOptionPane.showMessageDialog(this, "Esta tarea ya esta existe.",
+                    "Error al actualizar tarea", JOptionPane.ERROR_MESSAGE);
+        } else {
+            if (descripcion.length() > 100) {
+                JOptionPane.showMessageDialog(this, "La descripcion debe tener max 100 caracteres.",
+                        "Error al actualizar tarea", JOptionPane.ERROR_MESSAGE);
+            } else {
+                if (!descripcion.isEmpty() || !titulo.isEmpty()) {
+
+                    int confirmar = JOptionPane.showConfirmDialog(null, "¿Desea modificar la tarea? ");
+
+                    if (JOptionPane.OK_OPTION == confirmar) {
+                        tdao.actualizar(task);
+
+                        JOptionPane.showMessageDialog(this, ("Se ha actualizado la tarea."),
+                                "Tarea actualizada", JOptionPane.INFORMATION_MESSAGE);
+                    }
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Debe llenar la informacion requerida.",
+                            "Error al actualizar tarea", JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
@@ -255,6 +312,7 @@ public class PomodoroDlg extends javax.swing.JDialog {
 
                         txtTitulo.setText(task.getTitulo());
                         txtContenido.setText(task.getDescripcion());
+                        txtId.setText(task.getId_tarea().toString());
                         txtContenido.setEditable(false);
 
                     }
@@ -403,6 +461,17 @@ public class PomodoroDlg extends javax.swing.JDialog {
                             Logger.getLogger(PomodoroDlg.class
                                     .getName()).log(Level.SEVERE, null, ex);
                         }
+                    }
+                });
+
+                botonModificar.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+
+                        txtTitulo.setText(task.getTitulo());
+                        txtContenido.setText(task.getDescripcion());
+                        txtId.setText(task.getId_tarea().toString());
+                        txtContenido.setEditable(false);
                     }
                 });
 
