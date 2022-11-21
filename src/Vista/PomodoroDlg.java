@@ -54,13 +54,17 @@ public class PomodoroDlg extends javax.swing.JDialog {
         txtTitulo = new javax.swing.JTextField();
         botonAceptar = new javax.swing.JButton();
         botonLimpiar = new javax.swing.JButton();
-        panelTerminadas = new javax.swing.JTextPane();
-        panelPendientes = new javax.swing.JTextPane();
-        panelProgreso = new javax.swing.JTextPane();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         txtId = new javax.swing.JLabel();
+        txtEstado = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        panelTerminadas = new javax.swing.JTextPane();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        panelProgreso = new javax.swing.JTextPane();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        panelPendientes = new javax.swing.JTextPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -98,9 +102,6 @@ public class PomodoroDlg extends javax.swing.JDialog {
             }
         });
         jPanel1.add(botonLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 520, 140, 59));
-        jPanel1.add(panelTerminadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 120, 260, 520));
-        jPanel1.add(panelPendientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 120, 260, 520));
-        jPanel1.add(panelProgreso, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 120, 260, 520));
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/terminadas.png"))); // NOI18N
         jLabel2.setMaximumSize(new java.awt.Dimension(150, 78));
@@ -116,6 +117,19 @@ public class PomodoroDlg extends javax.swing.JDialog {
 
         txtId.setForeground(new java.awt.Color(0, 0, 0));
         jPanel1.add(txtId, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 200, 90, 30));
+        jPanel1.add(txtEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 200, 140, 30));
+
+        jScrollPane1.setViewportView(panelTerminadas);
+
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 120, 260, 520));
+
+        jScrollPane2.setViewportView(panelProgreso);
+
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 120, 260, 520));
+
+        jScrollPane3.setViewportView(panelPendientes);
+
+        jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 130, 260, 510));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -211,11 +225,12 @@ public class PomodoroDlg extends javax.swing.JDialog {
         Integer id = Integer.parseInt(this.txtId.getText());
         String titulo = this.txtTitulo.getText();
         String descripcion = this.txtContenido.getText();
+        String estado = this.txtEstado.getText();
         boolean existe = false;
 
         ArrayList<Task> tareas = tdao.consultar();
 
-        Task task = new Task(id, titulo, Timestamp.from(Instant.MIN), titulo, descripcion);
+        Task task = new Task(id, titulo, Timestamp.from(Instant.MIN), estado, descripcion);
 
         for (Task t : tareas) {
 
@@ -313,6 +328,7 @@ public class PomodoroDlg extends javax.swing.JDialog {
                         txtTitulo.setText(task.getTitulo());
                         txtContenido.setText(task.getDescripcion());
                         txtId.setText(task.getId_tarea().toString());
+                        txtEstado.setText(task.getEstado());
                         txtContenido.setEditable(false);
 
                     }
@@ -471,6 +487,7 @@ public class PomodoroDlg extends javax.swing.JDialog {
                         txtTitulo.setText(task.getTitulo());
                         txtContenido.setText(task.getDescripcion());
                         txtId.setText(task.getId_tarea().toString());
+                        txtEstado.setText(task.getEstado());
                         txtContenido.setEditable(false);
                     }
                 });
@@ -545,10 +562,14 @@ public class PomodoroDlg extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextPane panelPendientes;
     private javax.swing.JTextPane panelProgreso;
     private javax.swing.JTextPane panelTerminadas;
     private javax.swing.JTextArea txtContenido;
+    private javax.swing.JLabel txtEstado;
     private javax.swing.JLabel txtId;
     private javax.swing.JTextField txtTitulo;
     // End of variables declaration//GEN-END:variables
