@@ -93,7 +93,9 @@ public class Temporizador extends javax.swing.JFrame {
         }
 
         /**
-         * Para el temporizador en 0 y pregunta si quiere continuar con las demas sesiones pomodoro, si acaba una sesión pomodoro pregunta al usuario si quiere omitir el descanso.
+         * Para el temporizador en 0 y pregunta si quiere continuar con las
+         * demas sesiones pomodoro, si acaba una sesión pomodoro pregunta al
+         * usuario si quiere omitir el descanso.
          */
         private void pararTemporizadorEnCero() {
             validaSesion();
@@ -126,13 +128,13 @@ public class Temporizador extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "¡Continuemos con la siguiente sesion!");
                 System.out.println(sesion); // Sesion que acaba de pasar
                 imprimeSesion();
-                reiniciarTemporizador();
+                reiniciarTemporizadorCero();
                 iniciarTemporizador();
             } else if (opcion == JOptionPane.NO_OPTION) {
                 JOptionPane.showMessageDialog(null, "No te rindas, ¡suerte en tu proxima sesion!");
                 dispose();
             }
-            
+
         }
     });
 
@@ -256,9 +258,12 @@ public class Temporizador extends javax.swing.JFrame {
     }//GEN-LAST:event_btnIniciarActionPerformed
 
     /**
-     * Comprueba si el temporizador está en pausa, si es así se reanuda el temporizador 
+     * Comprueba si el temporizador está en pausa, si es así se reanuda el
+     * temporizador
      */
     public void iniciarTemporizador() {
+        System.out.println("Sesion: " + sesion);
+        System.out.println("Iteracion: " + iteracionSesiones);
         if (iniciarPresionado == false) {
             this.btnIniciar.setText("Parar");
             iniciarPresionado = true;
@@ -271,7 +276,8 @@ public class Temporizador extends javax.swing.JFrame {
     }
 
     /**
-     * Valida el estado de la sesión y cambia de sesión pomodoro a descanso y viceversa
+     * Valida el estado de la sesión y cambia de sesión pomodoro a descanso y
+     * viceversa
      */
     private void validaSesion() {
         if (sesion < maxSesiones) {
@@ -284,7 +290,8 @@ public class Temporizador extends javax.swing.JFrame {
     }
 
     /**
-     * Valida el conjunto de iteración de sesiones (sesión pomodoro y descanso). Sirve para validar la sesión de descanso larga.
+     * Valida el conjunto de iteración de sesiones (sesión pomodoro y descanso).
+     * Sirve para validar la sesión de descanso larga.
      */
     private void validaIteracionSesiones() {
         if (iteracionSesiones < 3) {
@@ -296,7 +303,7 @@ public class Temporizador extends javax.swing.JFrame {
     }
 
     /**
-     * Imprime la sesion actual en pantalla 
+     * Imprime la sesion actual en pantalla
      */
     private void imprimeSesion() {
         // Cada 3 iteraciones, en el descanso se da un descanso largo en vez de uno normal
@@ -325,7 +332,35 @@ public class Temporizador extends javax.swing.JFrame {
     /**
      * Reinicia el temporizador en su valor original de la sesión actual
      */
-    private void reiniciarTemporizador(){
+    private void reiniciarTemporizador() {
+//        System.out.println(sesion);
+//        System.out.println(iteracionSesiones);
+        for (int i = sesion; iteracionSesiones < 3;) {
+            validaSesion();
+            System.out.println("Sesion: " + sesion);
+            System.out.println("Iteracion: " + iteracionSesiones);
+        }
+        validaSesion();
+        validaSesion();
+        validaSesion();
+        System.out.println("Sesion: " + sesion);
+        System.out.println("Iteracion: " + iteracionSesiones);
+        timer.stop();
+        tiempoTranscurrido = tiempoSesion * 1000;
+        h = (tiempoTranscurrido / 3600000);
+        m = (tiempoTranscurrido / 60000) % 60;
+        s = (tiempoTranscurrido / 1000) % 60;
+
+        String h_string = String.format("%02d", h);
+        String m_string = String.format("%02d", m);
+        String s_string = String.format("%02d", s);
+        txtTemporizador.setText(h_string + ":" + m_string + ":" + s_string);
+        this.btnIniciar.setText("Iniciar");
+        iniciarPresionado = false;
+        imprimeSesion();
+    }
+    
+    private void reiniciarTemporizadorCero(){
         timer.stop();
         tiempoTranscurrido = tiempoSesion * 1000;
         h = (tiempoTranscurrido / 3600000);
@@ -339,7 +374,7 @@ public class Temporizador extends javax.swing.JFrame {
         this.btnIniciar.setText("Iniciar");
         iniciarPresionado = false;
     }
-    
+
     /**
      * @param args the command line arguments
      */
