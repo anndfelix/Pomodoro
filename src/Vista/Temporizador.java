@@ -31,6 +31,7 @@ public class Temporizador extends javax.swing.JFrame {
     private int h = tiempoTranscurrido / 3600000;
     private int m = (tiempoTranscurrido / 600000) % 60;
     private int s = (tiempoTranscurrido / 1000) % 60;
+    private SClip ruidoso;
 
     boolean iniciarPresionado = false;
     String h_string = String.format("%02d", h);
@@ -86,6 +87,16 @@ public class Temporizador extends javax.swing.JFrame {
                         System.out.println(ex.toString());
                     }
                 }
+                
+                if (h == 0 && m == 0 && s == 0) {
+                    try {
+                        Path rutaRelativa = Paths.get("src/iconos/ruidoso.wav");
+                        ruidoso = new SClip(rutaRelativa.toAbsolutePath().toString());
+                        ruidoso.loop();
+                    } catch (Exception ex) {
+                        System.out.println(ex.toString());
+                    }
+                }
 
             } else {
                 pararTemporizadorEnCero();
@@ -119,19 +130,23 @@ public class Temporizador extends javax.swing.JFrame {
                     if (omitirDescanso == JOptionPane.YES_OPTION && txtNumSesion.getText().equalsIgnoreCase("Sesion de descanso largo")) {
                         validaSesion();
                         validaSesion();
+                        ruidoso.stop();
                     }
                     if (omitirDescanso == JOptionPane.YES_OPTION) {
                         validaSesion();
+                        ruidoso.stop();
                     }
                 }
                 // TODO Hacer que el temporizador ponga bien el segundo
                 JOptionPane.showMessageDialog(null, "¡Continuemos con la siguiente sesion!");
+                ruidoso.stop();
                 System.out.println(sesion); // Sesion que acaba de pasar
                 imprimeSesion();
                 reiniciarTemporizadorCero();
                 iniciarTemporizador();
             } else if (opcion == JOptionPane.NO_OPTION) {
                 JOptionPane.showMessageDialog(null, "No te rindas, ¡suerte en tu proxima sesion!");
+                ruidoso.stop();
                 dispose();
             }
 
